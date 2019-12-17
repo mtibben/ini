@@ -163,6 +163,28 @@ VERSION = v1`))
 		So(f.Section("").Key("name").String(), ShouldEqual, "ini")
 		So(f.Section("").Key("version").String(), ShouldEqual, "v1")
 	})
+
+	Convey("Get list of section names with  load", t, func() {
+		f, err := ini.Load([]byte(`
+[FIRST]
+NAME = ini
+VERSION = v1`))
+		So(err, ShouldBeNil)
+		So(f, ShouldNotBeNil)
+
+		So(f.SectionStrings(), ShouldResemble, []string{ini.DefaultSection, "FIRST"})
+	})
+
+	Convey("Get list of section names with insensitive load", t, func() {
+		f, err := ini.InsensitiveLoad([]byte(`
+[FIRST]
+NAME = ini
+VERSION = v1`))
+		So(err, ShouldBeNil)
+		So(f, ShouldNotBeNil)
+
+		So(f.SectionStrings(), ShouldResemble, []string{ini.DefaultSection, "first"})
+	})
 }
 
 func TestFile_Sections(t *testing.T) {
